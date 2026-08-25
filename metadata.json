@@ -1,0 +1,6 @@
+{
+  "name": "Flood Risk Predictor",
+  "description": "Real-time flood risk estimation, river level monitoring, and early warning alert system for Kathmandu Valley and flood-prone basins in Nepal.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
