@@ -30,6 +30,11 @@ export interface FactorScoreBreakdown {
   rateOfRiseScore: number; // 0 - 100
   soilSaturationScore: number; // 0 - 100
   rawWeightedScore: number;
+  rainfallRateRawValue: number;
+  riverLevelRawValue: number;
+  rateOfRiseRawValue: number;
+  rainForecastRawValue: number;
+  soilSaturationRawValue: number;
 }
 
 export interface FloodRiskResult {
@@ -54,7 +59,7 @@ export interface LocationProfile {
   name: string;
   nameNepali: string;
   riverName: string;
-  region: 'Kathmandu Valley' | 'Terai Basin' | 'Hilly Basin';
+  region: 'Kathmandu Valley' | 'Koshi Basin' | 'Gandaki Basin' | 'Karnali Basin' | 'Mahakali Basin' | 'Terai Basin' | 'Hilly Basin';
   district: string;
   defaultDangerLevel: number; // meters
   defaultWarningLevel: number; // meters
@@ -70,7 +75,7 @@ export interface LocationProfile {
     y: number;
   };
   monitoringStationCode: string;
-  stationType: 'Automated Radar' | 'Acoustic Gauge' | 'Pressure Transducer';
+  stationType: 'Automated Radar' | 'Automated Radar Gauge' | 'Automated Acoustic Gauge' | 'Acoustic Gauge' | 'Pressure Transducer';
   vulnerableCommunities: string[];
 }
 

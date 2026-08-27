@@ -1,15 +1,12 @@
-import React, { useState } from 'react';
+import React from 'react';
 import {
   ShieldAlert,
   PhoneCall,
-  CheckSquare,
+  CheckCircle2,
   AlertTriangle,
   LifeBuoy,
-  Building,
-  HeartPulse,
-  Flame,
-  ChevronDown,
-  ChevronUp,
+  Users,
+  ExternalLink,
 } from 'lucide-react';
 import { FloodRiskLevel, FloodRiskResult, LocationProfile } from '../types';
 
@@ -24,179 +21,140 @@ export const EmergencyActionGuide: React.FC<EmergencyActionGuideProps> = ({
   location,
   language,
 }) => {
-  const [showAllContacts, setShowAllContacts] = useState(false);
-  const { riskLevel, recommendedActions, dangerThresholdExceeded } = result;
+  const { riskLevel, recommendedActions } = result;
 
-  const emergencyContacts = [
+  const hotlines = [
     {
-      title: 'DHM Flood Early Warning Toll-Free',
+      title: 'DHM Flood Alert (जल तथा मौसम विज्ञान विभाग)',
       number: '1155',
-      note: '24/7 River Level & Inundation Bulletin',
-      priority: true,
-      color: 'border-cyan-700/80 bg-slate-900 text-cyan-300',
+      desc: 'Toll-free 24/7 river bulletin & flood early warning',
+      color: 'bg-cyan-950/80 border-cyan-700 text-cyan-300',
     },
     {
-      title: 'Nepal Police Emergency Control',
+      title: 'Nepal Police Control (नेपाल प्रहरी)',
       number: '100',
-      note: 'Search, Rescue & Emergency Dispatch',
-      priority: true,
-      color: 'border-blue-700/80 bg-slate-900 text-blue-300',
+      desc: 'Emergency rescue, control & public safety',
+      color: 'bg-blue-950/80 border-blue-700 text-blue-300',
     },
     {
-      title: 'National Emergency Operations Center (NEOC)',
+      title: 'Disaster Response NEOC (राष्ट्रिय आपतकालीन कार्यसञ्चालन केन्द्र)',
       number: '1149',
-      note: 'Ministry of Home Affairs Disaster Hotline',
-      priority: true,
-      color: 'border-amber-700/80 bg-slate-900 text-amber-300',
+      desc: 'Ministry of Home Affairs disaster helpline',
+      color: 'bg-amber-950/80 border-amber-700 text-amber-300',
     },
     {
-      title: 'Nepal Red Cross Society',
-      number: '01-4270650',
-      note: 'First Aid, Relief Supplies & Shelters',
-      priority: false,
-      color: 'border-red-700/80 bg-slate-900 text-red-300',
+      title: 'Ambulance & Medical (एम्बुलेन्स सेवा)',
+      number: '102',
+      desc: 'Immediate emergency medical and ambulance dispatch',
+      color: 'bg-rose-950/80 border-rose-700 text-rose-300',
     },
     {
-      title: 'Armed Police Force (APF) Disaster Unit',
+      title: 'Armed Police Force Water Rescue (सशस्त्र प्रहरी बल)',
       number: '1114',
-      note: 'Water Rescue & Boat Deployment',
-      priority: false,
-      color: 'border-indigo-700/80 bg-slate-900 text-indigo-300',
-    },
-    {
-      title: 'Kathmandu Metropolitan Emergency',
-      number: '16600105511',
-      note: 'Municipal Drainage & Road Clearance',
-      priority: false,
-      color: 'border-emerald-700/80 bg-slate-900 text-emerald-300',
+      desc: 'Raft boat and rapid river search & rescue',
+      color: 'bg-indigo-950/80 border-indigo-700 text-indigo-300',
     },
   ];
 
   return (
-    <section id="emergency-actions-section" className="bg-slate-800/50 border border-slate-700 rounded-lg p-4 md:p-5 shadow-xl space-y-5">
-      {/* Section Header */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-slate-700">
+    <section id="emergency-actions-section" className="bg-slate-900 border border-slate-800 rounded-xl p-4 md:p-5 shadow-lg space-y-4">
+      {/* Header */}
+      <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-800">
         <div>
-          <div className="flex items-center gap-2">
-            <ShieldAlert className="w-4 h-4 text-red-400" />
-            <h3 className="text-[10px] uppercase tracking-[0.2em] text-slate-400 font-bold font-mono">
-              RECOMMENDED EMERGENCY ACTIONS & STANDARD OPERATING PROTOCOLS
-            </h3>
-          </div>
-          <p className="text-[11px] text-slate-400 font-sans mt-0.5">
-            Emergency advisory for <span className="text-slate-200 font-bold font-mono">{location.name.toUpperCase()}</span> based on active risk level ({riskLevel})
+          <h3 className="text-sm font-bold text-white flex items-center gap-1.5">
+            <ShieldAlert className="w-4 h-4 text-cyan-400" />
+            {language === 'NE' ? 'आपतकालीन कार्य र सुरक्षा निर्देशन' : 'Emergency Action Checklist & Response Guide'}
+          </h3>
+          <p className="text-xs text-slate-400">
+            {language === 'NE' ? `${location.name} को लागि सुरक्षा उपायहरू` : `Safety measures for ${location.name} (${riskLevel} risk level)`}
           </p>
         </div>
 
         <span
-          className={`px-2.5 py-1 rounded text-[10px] font-mono font-bold uppercase tracking-wider border ${
+          className={`px-3 py-1 rounded-full text-xs font-bold uppercase border ${
             riskLevel === 'SEVERE' || riskLevel === 'HIGH'
-              ? 'bg-red-950 text-red-300 border-red-600'
+              ? 'bg-red-950 text-red-300 border-red-600 animate-pulse'
               : riskLevel === 'MODERATE'
               ? 'bg-amber-950 text-amber-300 border-amber-600'
               : 'bg-emerald-950 text-emerald-300 border-emerald-600'
           }`}
         >
-          SOP PROTOCOL: LEVEL {riskLevel}
+          {riskLevel} PROTOCOL
         </span>
       </div>
 
-      {/* Action List */}
+      {/* Action Steps */}
       <div className="space-y-2">
-        <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-          <CheckSquare className="w-3.5 h-3.5 text-cyan-400" />
-          MANDATORY ACTION CHECKLIST
+        <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wide flex items-center gap-1.5">
+          <CheckCircle2 className="w-3.5 h-3.5 text-cyan-400" />
+          {language === 'NE' ? 'तुरुन्त गर्नुपर्ने कामहरू' : 'Immediate Recommended Actions'}:
         </h4>
-        <div className="grid grid-cols-1 gap-2">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
           {recommendedActions.map((action, idx) => (
             <div
               key={idx}
-              className={`p-3 rounded border flex items-start gap-3 transition-colors ${
+              className={`p-3 rounded-lg border flex items-start gap-2.5 ${
                 riskLevel === 'SEVERE' || riskLevel === 'HIGH'
-                  ? 'bg-red-950/40 border-red-800/80 text-red-100'
+                  ? 'bg-red-950/30 border-red-800/80 text-red-100'
                   : riskLevel === 'MODERATE'
                   ? 'bg-amber-950/30 border-amber-800/60 text-amber-100'
-                  : 'bg-slate-900/80 border-slate-700/80 text-slate-300'
+                  : 'bg-slate-950/70 border-slate-800 text-slate-300'
               }`}
             >
-              <span className="w-5 h-5 rounded bg-slate-950 border border-slate-700 flex items-center justify-center text-[10px] font-mono font-bold text-cyan-400 shrink-0 mt-0.5">
+              <span className="w-5 h-5 rounded-full bg-cyan-900 text-cyan-200 flex items-center justify-center text-xs font-bold shrink-0 mt-0.5">
                 {idx + 1}
               </span>
-              <p className="text-xs md:text-sm leading-relaxed font-sans">{action}</p>
+              <p className="text-xs md:text-sm leading-relaxed">{action}</p>
             </div>
           ))}
         </div>
       </div>
 
-      {/* Emergency Contacts Directory */}
-      <div className="pt-2 border-t border-slate-700 space-y-2.5">
-        <div className="flex items-center justify-between">
-          <h4 className="text-[10px] font-mono font-bold text-slate-400 uppercase tracking-widest flex items-center gap-1.5">
-            <PhoneCall className="w-3.5 h-3.5 text-red-400" />
-            NEPAL DISASTER EMERGENCY HOTLINES
-          </h4>
-          <button
-            type="button"
-            onClick={() => setShowAllContacts(!showAllContacts)}
-            className="text-[10px] font-mono uppercase text-cyan-400 hover:text-cyan-300 flex items-center gap-1 cursor-pointer"
-          >
-            {showAllContacts ? 'SHOW LESS' : 'VIEW ALL HOTLINES'}
-            {showAllContacts ? <ChevronUp className="w-3 h-3" /> : <ChevronDown className="w-3 h-3" />}
-          </button>
+      {/* Vulnerable Settlements */}
+      {location.vulnerableCommunities.length > 0 && (
+        <div className="bg-slate-950/80 p-3 rounded-lg border border-slate-800 space-y-1.5">
+          <div className="flex items-center gap-1.5 text-xs font-bold text-slate-300">
+            <Users className="w-3.5 h-3.5 text-cyan-400" />
+            <span>{language === 'NE' ? 'जोखिमयुक्त नजिकका बस्तीहरू' : 'High-Risk Riverside Settlements in this Catchment'}:</span>
+          </div>
+          <div className="flex flex-wrap gap-1.5">
+            {location.vulnerableCommunities.map((comm, i) => (
+              <span
+                key={i}
+                className="px-2.5 py-1 rounded bg-slate-900 text-slate-300 border border-slate-700 text-xs"
+              >
+                📍 {comm}
+              </span>
+            ))}
+          </div>
         </div>
+      )}
+
+      {/* Direct Emergency Call Hotlines */}
+      <div className="pt-2 border-t border-slate-800 space-y-2">
+        <h4 className="text-xs font-bold text-slate-300 uppercase tracking-wide flex items-center gap-1.5">
+          <PhoneCall className="w-3.5 h-3.5 text-cyan-400" />
+          {language === 'NE' ? 'नेपाल आपतकालीन हटलाइनहरू (१-ट्याप कल)' : 'Nepal Emergency Hotlines (1-Tap Call)'}:
+        </h4>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
-          {(showAllContacts ? emergencyContacts : emergencyContacts.slice(0, 3)).map((contact, idx) => (
-            <div
+          {hotlines.map((item, idx) => (
+            <a
               key={idx}
-              className={`p-3 rounded border ${contact.color} flex flex-col justify-between gap-2 shadow-sm`}
+              href={`tel:${item.number}`}
+              className={`p-3 rounded-lg border flex items-center justify-between gap-3 hover:brightness-125 transition-all shadow-sm ${item.color}`}
             >
-              <div>
-                <span className="text-xs font-bold text-slate-200 block leading-tight">
-                  {contact.title}
-                </span>
-                <span className="text-[10px] text-slate-400 font-sans">{contact.note}</span>
+              <div className="space-y-0.5">
+                <span className="text-xs font-bold block">{item.title}</span>
+                <span className="text-[10px] text-slate-400 block">{item.desc}</span>
               </div>
-
-              <div className="flex items-center justify-between pt-1.5 border-t border-slate-800">
-                <a
-                  href={`tel:${contact.number}`}
-                  className="font-mono text-base font-black tracking-wider hover:underline flex items-center gap-1.5"
-                >
-                  <PhoneCall className="w-3.5 h-3.5" />
-                  {contact.number}
-                </a>
-                <a
-                  href={`tel:${contact.number}`}
-                  className="text-[9px] font-mono font-bold uppercase px-2 py-0.5 rounded bg-slate-800 text-white border border-slate-600 hover:bg-slate-700"
-                >
-                  CALL NOW
-                </a>
+              <div className="flex items-center gap-1 bg-slate-950 px-2.5 py-1.5 rounded-md border border-slate-700 shrink-0">
+                <PhoneCall className="w-3.5 h-3.5 text-emerald-400" />
+                <span className="text-xs font-bold text-white">{item.number}</span>
               </div>
-            </div>
+            </a>
           ))}
         </div>
-      </div>
-
-      {/* Flood Preparedness Kit (Go-Bag) Box */}
-      <div className="bg-slate-900/80 p-3.5 rounded border border-slate-700 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 font-mono">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded bg-amber-500/20 border border-amber-500/40 flex items-center justify-center shrink-0">
-            <LifeBuoy className="w-4 h-4 text-amber-400" />
-          </div>
-          <div>
-            <h5 className="text-xs font-bold text-slate-200 uppercase">
-              ESSENTIAL FLOOD EVACUATION GO-BAG
-            </h5>
-            <p className="text-[11px] text-slate-400 font-sans">
-              Waterproof pouch for Citizenship/NID, Torch + spare batteries, ORS / basic medicines, 3-day dry food, whistle.
-            </p>
-          </div>
-        </div>
-
-        <span className="text-[9px] font-mono font-bold uppercase px-2.5 py-1 rounded bg-slate-950 text-amber-300 border border-slate-700 whitespace-nowrap">
-          KEEP AT EXIT
-        </span>
       </div>
     </section>
   );

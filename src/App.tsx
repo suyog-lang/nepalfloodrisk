@@ -261,6 +261,7 @@ export default function App() {
             onRefreshLiveWeather={() => loadLiveWeather(selectedLocation, isLiveSynced)}
             onSyncLiveInputs={handleSyncLiveInputs}
             isLiveSynced={isLiveSynced}
+            language={language}
           />
         </div>
 
